@@ -1,121 +1,120 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', 'SANTRIX ANEXO LOCAL')</title>
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700|space-grotesk:500,700" rel="stylesheet" />
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-            <style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#f1f5f9;
-    color:#1e293b;
-}
-.sidebar{
-    width:250px;
-    background:#0f172a;
-    color:white;
-    min-height:100vh;
-    padding:20px;
-    position:fixed;
-}
-.content{
-    margin-left:270px;
-    padding:30px;
-}
-.card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-}
-.btn{
-    display:inline-block;
-    padding:10px 15px;
-    background:#0ea5e9;
-    color:white;
-    border-radius:10px;
-    text-decoration:none;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-}
-table th{
-    background:#0f172a;
-    color:white;
-    padding:12px;
-}
-table td{
-    padding:10px;
-    border-bottom:1px solid #ddd;
-}
-</style>
-    </head>
-    <body class="min-h-screen bg-slate-100 text-slate-800">
-        <div class="min-h-screen lg:flex">
-            <aside class="border-b border-slate-200 bg-slate-950 text-slate-100 lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r lg:border-slate-800">
-                <div class="flex items-center justify-between px-6 py-6">
-                    <div>
-                        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">SANTRIX</p>
-                        <h1 class="mt-2 font-display text-2xl font-bold">ANEXO LOCAL</h1>
-                        <p class="mt-2 text-sm text-slate-400">Gestión local del Anexo A en Laravel + SQLite.</p>
-                    </div>
-                </div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dashboard') | SANTRIX Anexo Local</title>
+    <script>
+        try { if (localStorage.getItem('tema') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>{!! file_get_contents(public_path('css/santrix.css')) !!}</style>
+</head>
+<body>
+@php
+    $menu = [
+        ['url' => 'dashboard', 'match' => 'dashboard*', 'texto' => 'Dashboard',
+         'icono' => '<path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-3H4zM14 4v3h6V4z"/>'],
+        ['url' => 'anexos', 'match' => 'anexos*', 'texto' => 'Configuración Anexo A',
+         'icono' => '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>'],
+        ['url' => 'registros', 'match' => 'registros*', 'texto' => 'Registros Anexo A',
+         'icono' => '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>'],
+        ['url' => 'importaciones/anexo-a', 'match' => 'importaciones*', 'texto' => 'Importar Excel',
+         'icono' => '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 17v-6M9.5 13.5 12 11l2.5 2.5"/>'],
+    ];
+@endphp
+<div class="app">
+    <aside class="sidebar">
+        <a class="brand" href="{{ url('dashboard') }}">
+            <small>SANTRIX</small>
+            <strong>Anexo Local</strong>
+            <p>Gestión local del Anexo A en Laravel + SQLite.</p>
+        </a>
+        <nav class="nav" aria-label="Menú principal">
+            @foreach ($menu as $item)
+                @php $activo = request()->is($item['match']); @endphp
+                <a href="{{ url($item['url']) }}" class="{{ $activo ? 'active' : '' }}" @if($activo) aria-current="page" @endif>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{!! $item['icono'] !!}</svg>
+                    {{ $item['texto'] }}
+                </a>
+            @endforeach
+        </nav>
+        <div class="sidebar-foot">Los datos se guardan en este equipo.</div>
+    </aside>
 
-                <nav class="space-y-2 px-4 pb-6">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'nav-link-active' : '' }}">Dashboard</a>
-                    <a href="{{ route('anexos.index') }}" class="nav-link {{ request()->routeIs('anexos.*') ? 'nav-link-active' : '' }}">Configuración del Anexo</a>
-                    <a href="{{ route('registros.index') }}" class="nav-link {{ request()->routeIs('registros.*') ? 'nav-link-active' : '' }}">Registros Anexo A</a>
-                    <a href="{{ route('importaciones.create') }}" class="nav-link {{ request()->routeIs('importaciones.*') ? 'nav-link-active' : '' }}">Importar Excel</a>
-                </nav>
-            </aside>
-
-            <div class="flex-1">
-                <header class="border-b border-slate-200 bg-white/90 backdrop-blur">
-                    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
-                        <div>
-                            <p class="text-sm font-medium text-slate-500">Sistema local</p>
-                            <h2 class="font-display text-2xl font-bold text-slate-900">@yield('page-title', 'SANTRIX ANEXO LOCAL')</h2>
-                        </div>
-                        <div class="rounded-full border border-cyan-100 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700">
-                            {{ now()->format('d/m/Y H:i') }}
-                        </div>
-                    </div>
-                </header>
-
-                <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    @if (session('success'))
-                        <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    @if ($errors->any())
-                        <div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                            <p class="font-semibold">Revisa los campos del formulario.</p>
-                            <ul class="mt-2 list-disc space-y-1 pl-5">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    @yield('content')
-                </main>
+    <div class="main">
+        <header class="topbar">
+            <div>
+                <small>Sistema local</small>
+                @php
+                    $tituloAuto = match (true) {
+                        request()->is('registros/create') => 'Nuevo registro',
+                        request()->is('registros/*/edit') => 'Editar registro',
+                        request()->is('registros/exportar*') => 'Registros Anexo A',
+                        request()->is('registros/*') => 'Detalle del registro',
+                        request()->is('registros*') => 'Registros Anexo A',
+                        request()->is('anexos/create') => 'Nuevo anexo',
+                        request()->is('anexos/*/edit') => 'Editar anexo',
+                        request()->is('anexos/*') => 'Detalle del anexo',
+                        request()->is('anexos*') => 'Configuración del Anexo',
+                        request()->is('importaciones*') => 'Importar Excel',
+                        default => 'Dashboard',
+                    };
+                @endphp
+                <h1>@yield('heading', $tituloAuto)</h1>
+                @hasSection('subheading')<p>@yield('subheading')</p>@endif
             </div>
-        </div>
-    </body>
+            <div class="topbar-tools">
+                <button class="pill" type="button" id="btn-tema" aria-pressed="false">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+                    <span>Modo oscuro</span>
+                </button>
+                <span class="pill pill-date">{{ now()->format('d/m/Y H:i') }}</span>
+            </div>
+        </header>
+
+        <main class="page">
+            @hasSection('actions')<div class="page-actions">@yield('actions')</div>@endif
+
+            @if (session('success'))
+                <div class="alert alert-ok" role="status">{{ session('success') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-bad" role="alert">{{ session('error') }}</div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-bad" role="alert">
+                    Revisa los campos marcados antes de guardar:
+                    <ul>@foreach ($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
+                </div>
+            @endif
+
+            @yield('content')
+        </main>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var btn = document.getElementById('btn-tema');
+        var html = document.documentElement;
+        var pintar = function () {
+            var oscuro = html.dataset.theme === 'dark';
+            btn.querySelector('span').textContent = oscuro ? 'Modo claro' : 'Modo oscuro';
+            btn.setAttribute('aria-pressed', oscuro);
+        };
+        btn.addEventListener('click', function () {
+            if (html.dataset.theme === 'dark') { delete html.dataset.theme; } else { html.dataset.theme = 'dark'; }
+            try { localStorage.setItem('tema', html.dataset.theme || 'light'); } catch (e) {}
+            pintar();
+        });
+        pintar();
+    })();
+</script>
+@include('partials.mejoras')
+@stack('scripts')
+</body>
 </html>
