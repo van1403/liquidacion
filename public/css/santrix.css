@@ -205,3 +205,10 @@ fieldset{border:0;padding:0;margin:0}
 .page td .btn-sm{margin:2px 0}
 .page td form{display:inline}
 .info-auto{margin-bottom:20px}
+
+.field-auto:has([data-ancho='2']){grid-column:span 2}
+.ayuda-unidad{color:var(--muted);font-size:12.5px;line-height:1.4}
+
+.ayuda-agente{color:var(--muted);font-size:12.5px;line-height:1.4}
+.ayuda-agente.sin-dato{color:var(--warn)}
+.autollenado{background:var(--ok-soft)!important;border-color:var(--ok)!important;transition:background .3s}

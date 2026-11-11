@@ -114,6 +114,16 @@
         pintar();
     })();
 </script>
+@if (request()->is('registros/create') || request()->is('registros/*/edit'))
+@php
+    $catalogoUnidades = \Illuminate\Support\Facades\DB::table('catalogos')
+        ->where('tipo', 'codigo_unidad')->where('activo', 1)
+        ->orderBy('id')->get(['codigo', 'nombre']);
+@endphp
+<script>window.CATALOGO_UNIDADES = @json($catalogoUnidades);</script>
+@include('partials.catalogo-unidad')
+@include('partials.agentes-autocompletar')
+@endif
 @include('partials.mejoras')
 @stack('scripts')
 </body>
